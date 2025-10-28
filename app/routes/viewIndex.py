@@ -1,4 +1,4 @@
-from app.config import db, app
+from config import db, app
 from flask import Blueprint, jsonify, render_template
 
 view_index = Blueprint('view_index', __name__)
