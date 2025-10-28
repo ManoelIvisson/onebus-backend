@@ -1,4 +1,4 @@
-from config import app, db
+from app.config import app, db
 from routes.viewIndex import view_index
 # from routes.viewMotorista import view_motorista
 # from routes.viewCidadao import view_cidadao
