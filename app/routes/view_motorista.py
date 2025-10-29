@@ -5,75 +5,73 @@ from models.veiculo import Veiculo
 
 view_motorista = Blueprint('view_motorista', __name__)
 
-@view_motorista.route('/', methods=['GET', 'POST'])
-def post_new_motorista():
+@view_motorista.route('/create', methods=['POST'])
+def cerate_motorista():
     """
-    Rota para cadastrar um motorista mockado no banco de dados.
+    Rota para cadastrar um motorista no banco de dados.
     """
 
-    if request.method == 'POST':
-        data = request.get_json() # pega todos os dados passados pelo body
+    data = request.get_json() # pega todos os dados passados pelo body
 
-        cnh_motorista = data.get('motorista-cnh') 
-        cpf_motorista = data.get('motorista-cpf') 
-        nome_motorista = data.get('motorista-nome') 
-        senha = data.get('senha') 
-        tipo_usuario = data.get('tipo-usuario') 
-        carro_placa = data.get('placa-carro')
+    cnh = data.get('cnh') 
+    cpf= data.get('cpf') 
+    nome = data.get('nome') 
+    senha = data.get('senha') 
+    role = data.get('role') 
+    veiculo_id = data.get('veiculo-id')
 
-        try:
-            motorista_existente = Motorista.query.filter_by(cpf=cpf_motorista).first()
-            cnh_existente = Motorista.query.filter_by(cnh=cnh_motorista).first()
+    try:
+        motorista_existente = Motorista.query.filter_by(cpf=cpf).first()
+        cnh_existente = Motorista.query.filter_by(cnh=cnh).first()
 
-        except Exception as e:
-            return jsonify({
-                'status':'error',
-                'message':f'{str(e)}'
-            }), 500
-        
-        if motorista_existente or cnh_existente:
-            return jsonify({
-                "status": "conflict"
-            }), 409
-
-        try:
-            new_motorista = Motorista(
-                cnh=cnh_motorista,
-                cpf=cpf_motorista,
-                nome_completo=nome_motorista,
-                senha=senha,
-                tipo_usuario=tipo_usuario,
-            )
-
-            if carro_placa:
-                try:
-                    carro_desejado = Carro.query.filter_by(placa=carro_placa).first()
-                
-                except Exception as e:
-                    return jsonify({
-                        'status':'error',
-                        'message':f'{str(e)}'
-                    }), 500
-                
-                carro_desejado.motorista_cnh.append(new_motorista)
-
-            db.session.add(new_motorista)
-            db.session.commit()
-        
-        except Exception as e:
-            return jsonify({
-                'status':'error',
-                'message':f'{str(e)}'
-            }), 500
-        
+    except Exception as e:
         return jsonify({
-            "status": "created"
-        }), 201
+            'status':'error',
+            'message':f'{str(e)}'
+        }), 500
     
-    # return render_template('pagina_cadastro_motorista.html'), 302
+    if motorista_existente or cnh_existente:
+        return jsonify({
+            "status": "conflict"
+        }), 409
 
-@view_motorista.route('/todos', methods=['GET'])
-def get_motorista():
+    try:
+        motorista = Motorista(
+            cnh=cnh,
+            cpf=cpf,
+            nome_completo=nome,
+            senha=senha,
+            role=role,
+        )
+
+        if veiculo_id:
+            try:
+                veiculo = Veiculo.query.filter_by(id=veiculo_id).first()
+            
+            except Exception as e:
+                return jsonify({
+                    'status':'error',
+                    'message':f'{str(e)}'
+                }), 500
+            
+            motorista.veiculos.append(veiculo)
+
+        db.session.add(motorista)
+        db.session.commit()
+        
+    except Exception as e:
+        return jsonify({
+            'status':'error',
+            'message':f'{str(e)}'
+        }), 500
+    
+    return jsonify({
+        "status": "created"
+    }), 201
+    
+
+@view_motorista.route('/get-all', methods=['GET'])
+def get_motoristas():
     """
     Rota para mostrar todos os motoristas
 
@@ -81,7 +79,7 @@ def get_motorista():
         Get
 
     Retorno:
-        Página listando todos os motoristas
+        JSON listando todos os motoristas
     """
     try:
         motoristas = Motorista.query.all()
@@ -95,7 +93,7 @@ def get_motorista():
     resposta_json = {}
 
     for motorista in motoristas:
-        resposta_json[motorista.cpf] = {"nome completo":motorista.nome_completo, "cpf":motorista.cpf, "senha":motorista.senha, "tipo usuario":motorista.tipo_usuario, "placa do carro":motorista.carro_placa, "cnh":motorista.cnh}
+        resposta_json[motorista.id] = {"nome completo":motorista.nome_completo, "cpf":motorista.cpf, "senha":motorista.senha, "role":motorista.role, "Veiculos":motorista.veiculos, "cnh":motorista.cnh}
 
     return jsonify({
         "status":"success",
@@ -134,7 +132,6 @@ def get_especific_motorista():
             "status":"success",
             "data":resposta_json
         }), 200
-        # return render_template('motorista_especifico.html', motorista=motorista), 302
     
     else:
         return jsonify({
@@ -230,7 +227,7 @@ def edit_motorista():
             
             if new_placa != motorista.carro_placa and new_placa != None:
                 try:
-                    carro_desejado = Carro.query.filter_by(placa=new_placa).first()
+                    carro_desejado = Veiculo.query.filter_by(placa=new_placa).first()
 
                     if carro_desejado:
                         carro_desejado.motorista_cnh.append(motorista)

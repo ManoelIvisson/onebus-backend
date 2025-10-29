@@ -18,6 +18,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{app.root_path}/database/one
 class Base(DeclarativeBase):
     # responsáveis para relacionamento 1:N
     __abstract__ = True
-    __allow_unmapped__ = True
+    #__allow_unmapped__ = True
 
 db = SQLAlchemy(app, model_class=Base)
