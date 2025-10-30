@@ -3,9 +3,9 @@ from flask import Blueprint, request, jsonify, render_template
 from models.motorista import Motorista
 from models.veiculo import Veiculo
 
-view_motorista = Blueprint('view_motorista', __name__)
+motorista_bp = Blueprint('view_motorista', __name__)
 
-@view_motorista.route('/create', methods=['POST'])
+@motorista_bp.route('/create', methods=['POST'])
 def cerate_motorista():
     """
     Rota para cadastrar um motorista no banco de dados.
@@ -18,7 +18,7 @@ def cerate_motorista():
     nome = data.get('nome') 
     senha = data.get('senha') 
     role = data.get('role') 
-    veiculo_id = data.get('veiculo-id')
+    veiculo_id = data.get('veiculo_id')
 
     try:
         motorista_existente = Motorista.query.filter_by(cpf=cpf).first()
@@ -70,7 +70,7 @@ def cerate_motorista():
     }), 201
     
 
-@view_motorista.route('/get-all', methods=['GET'])
+@motorista_bp.route('/get-all', methods=['GET'])
 def get_motoristas():
     """
     Rota para mostrar todos os motoristas
@@ -93,14 +93,23 @@ def get_motoristas():
     resposta_json = {}
 
     for motorista in motoristas:
-        resposta_json[motorista.id] = {"nome completo":motorista.nome_completo, "cpf":motorista.cpf, "senha":motorista.senha, "role":motorista.role, "Veiculos":motorista.veiculos, "cnh":motorista.cnh}
+        veiculos_serializados = [veiculo.to_dict() for veiculo in motorista.veiculos]
+
+        resposta_json[motorista.id] = {
+            "nome completo": motorista.nome_completo, 
+            "cpf": motorista.cpf, 
+            "senha": motorista.senha, 
+            "role": motorista.role, 
+            "veiculos": veiculos_serializados, 
+            "cnh": motorista.cnh
+        }
 
     return jsonify({
         "status":"success",
         "data":resposta_json
         }), 200
 
-@view_motorista.route('/get/<int:id>', methods=['GET'])
+@motorista_bp.route('/get/<int:id>', methods=['GET'])
 def get_motorista(id):
     """
     Rota para mostrar um motorista pelo id passado pela URL
@@ -122,14 +131,15 @@ def get_motorista(id):
         }), 500
     
     if motorista:
+        veiculos_serializados = [veiculo.to_dict() for veiculo in motorista.veiculos]
         resposta_json = {
             "id": motorista.id,
             "nome completo": motorista.nome_completo, 
-            "cpf":motorista.cpf, 
-            "senha":motorista.senha, 
-            "role":motorista.role, 
-            "veiculos":motorista.veiculos, 
-            "cnh":motorista.cnh
+            "cpf": motorista.cpf, 
+            "senha": motorista.senha, 
+            "role": motorista.role, 
+            "veiculos": veiculos_serializados, 
+            "cnh": motorista.cnh
         }
 
         return jsonify({
@@ -142,7 +152,7 @@ def get_motorista(id):
             'status':'not found'
         }), 404
 
-@view_motorista.route('/delete/<int:id>', methods=['DELETE'])
+@motorista_bp.route('/delete/<int:id>', methods=['DELETE'])
 def delete_motorista(id):
     """
     Rota para deletar um motorista com o id informado
@@ -183,7 +193,7 @@ def delete_motorista(id):
         }), 404
 
 
-@view_motorista.route('/put/<int:id>', methods=['PUT'])
+@motorista_bp.route('/edit/<int:id>', methods=['PUT'])
 def edit_motorista(id):
     """
     Rota para editar um motorista com o id informado

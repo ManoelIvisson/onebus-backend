@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class Trajeto(db.Model):
     __tablename__ = 'trajeto'
 
-    id_trajeto: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     servico_prestado: Mapped[str] = mapped_column(String(50))
     ponto_origem: Mapped[str] = mapped_column(String(50))
     ponto_destino: Mapped[str] = mapped_column(String(50))

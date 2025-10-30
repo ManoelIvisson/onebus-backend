@@ -12,11 +12,18 @@ class Veiculo(db.Model):
 
     id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True)
     placa: Mapped[str] = mapped_column(String(7), unique=True)
-    tipo_veiculo: Mapped[str] = mapped_column(String(20))
+    tipo: Mapped[str] = mapped_column(String(20))
 
     motoristas: Mapped[list['Motorista']] = relationship(
         secondary=motorista_veiculo, back_populates="veiculos"
     )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "tipo": self.tipo,
+            "placa": self.placa
+        }
 
     # relacionamento N trajetos de viagem para 1 carro
     # cada carro pode ter vários trajetos associados
