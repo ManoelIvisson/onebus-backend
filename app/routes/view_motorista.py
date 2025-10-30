@@ -99,25 +99,21 @@ def get_motoristas():
         "status":"success",
         "data":resposta_json
         }), 200
-    # return render_template('todos_motoristas.html', all_motoristas=motoristas), 302
 
-@view_motorista.route('/motorista-especifico', methods=['GET', 'POST'])
-def get_especific_motorista():
+@view_motorista.route('/get/<int:id>', methods=['GET'])
+def get_motorista(id):
     """
-    Rota para mostrar um motorista especifico pela cnh informada
+    Rota para mostrar um motorista pelo id passado pela URL
 
     Método:
         Get
 
     Retorno:
-        Página listando motorista especifico
+        JSON do motorista buscado
     """
 
-    data = request.get_json()
-    cnh_desejado = data.get('motorista-cnh')
-
     try:
-        motorista = Motorista.query.filter_by(cnh=cnh_desejado).first()
+        motorista = Motorista.query.filter_by(id=id).first()
 
     except Exception as e:
         return jsonify({
@@ -126,7 +122,15 @@ def get_especific_motorista():
         }), 500
     
     if motorista:
-        resposta_json = {"nome completo":motorista.nome_completo, "cpf":motorista.cpf, "senha":motorista.senha, "tipo usuario":motorista.tipo_usuario, "placa do carro":motorista.carro_placa, "cnh":motorista.cnh}
+        resposta_json = {
+            "id": motorista.id,
+            "nome completo": motorista.nome_completo, 
+            "cpf":motorista.cpf, 
+            "senha":motorista.senha, 
+            "role":motorista.role, 
+            "veiculos":motorista.veiculos, 
+            "cnh":motorista.cnh
+        }
 
         return jsonify({
             "status":"success",
@@ -138,118 +142,95 @@ def get_especific_motorista():
             'status':'not found'
         }), 404
 
-@view_motorista.route('/excluir-motorista', methods=['GET', 'DELETE'])
-def delete_motorista():
+@view_motorista.route('/delete/<int:id>', methods=['DELETE'])
+def delete_motorista(id):
     """
-    Rota para deletar um motorista específico com o cpf informado
+    Rota para deletar um motorista com o id informado
 
     Método:
-        Get, Post
+        DELETE
 
     Retorno:
-        Página indicando motorista deletado
+        JSON indicando que o motorista foi deletado
     """
-    if request.method == 'DELETE':
-        cpf_motorista = request.form.get('motorista-cpf')
-        
+    
+    try:
+        motorista = Motorista.query.filter_by(id=id).first()
+    
+    except Exception as e:
+        return jsonify({
+            'status':'error',
+            'message':f'{str(e)}'
+        }), 500
+    
+    if motorista:
         try:
-            motorista = Motorista.query.filter_by(cpf=cpf_motorista).first()
+            Motorista.query.filter_by(id=motorista.id).delete()
+            db.session.commit()
         
         except Exception as e:
             return jsonify({
-                'status':'error',
-                'message':f'{str(e)}'
+                "status":"error",
+                "message":f"{str(e)}"
             }), 500
         
-        if motorista:
-            try:
-                Motorista.query.filter_by(cpf=cpf_motorista).delete()
-                db.session.commit()
-            
-            except Exception as e:
-                return jsonify({
-                    "status":"error",
-                    "message":f"{str(e)}"
-                }), 500
-            
-            return jsonify({
-                "status":"deleted"
-            }), 204
-        
-        else:
-            return jsonify({
-                "status":"not found"
-            }), 404
-        
-    # return render_template('motoristas.html'), 302
+        return jsonify({
+            "status":"deleted"
+        }), 200
+    else: 
+        return jsonify({
+            "status": "not found"
+        }), 404
 
-@view_motorista.route('/alterar-motorista', methods=['GET', 'PATCH'])
-def edit_motorista():
+
+@view_motorista.route('/put/<int:id>', methods=['PUT'])
+def edit_motorista(id):
     """
-    Rota para editar um motorista específico com o cpf informado
+    Rota para editar um motorista com o id informado
 
     Método:
-        Get, Patch
+        PUT
 
     Retorno:
-        Página mostrando motorista editado
+        JSON mostrando motorista editado
     """
 
-    if request.method == 'PATCH':
-        data = request.get_json()
-        cpf_motorista = data.get('motorista-cpf')
-        
+    data = request.get_json()
+    
+    try:
+        motorista = Motorista.query.filter_by(id=id).first()
+
+    except Exception as e:
+        return jsonify({
+            'status':'error',
+            'message':f'{str(e)}'
+        }), 500
+    
+    if motorista:
+        nome = data.get('nome')
+        cnh = data.get('cnh')
+        cpf = data.get('cpf')
+        senha = data.get('senha')
+        role = data.get('role')
+
         try:
-            motorista = Motorista.query.filter_by(cpf=cpf_motorista).first()
+            motorista.nome_completo = nome
+            motorista.cnh = cnh
+            motorista.cpf = cpf
+            motorista.senha = senha
+            motorista.role = role
+            db.session.commit()
 
         except Exception as e:
             return jsonify({
-                'status':'error',
-                'message':f'{str(e)}'
+                "status":"error",
+                "message":f"{str(e)}"
             }), 500
-        
-        if motorista:
-            new_nome = data.get('motorista-nome')
-            new_placa = data.get('placa-carro')
-            # new_cnh = data.get('motorista-cnh')
-            # new_tipo_usuario = data.get('tipo-usuario')
 
-            if new_nome != motorista.nome_completo and new_nome != None:
-                try:
-                    motorista.nome_completo = new_nome
-                    db.session.commit()
-
-                except Exception as e:
-                    return jsonify({
-                        "status":"error",
-                        "message":f"{str(e)}"
-                    }), 500
-            
-            if new_placa != motorista.carro_placa and new_placa != None:
-                try:
-                    carro_desejado = Veiculo.query.filter_by(placa=new_placa).first()
-
-                    if carro_desejado:
-                        carro_desejado.motorista_cnh.append(motorista)
-                        db.session.commit()
-
-                    else:
-                        return jsonify({
-                            "status":"not found",
-                        }), 404
-
-                except Exception as e:
-                    return jsonify({
-                        "status":"error",
-                        "message":f"{str(e)}"
-                    }), 500
-            
-            # db.session.commit()
-            return jsonify({
-                "status":"updated",
-            }), 204
-
-        else:
-            return jsonify({
-                "status":"not found",
-            }), 404
+        return jsonify({
+            "status":"updated",
+        }), 200
+    else:
+        return jsonify({
+            "status":"not found",
+        }), 404
