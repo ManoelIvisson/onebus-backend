@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 CORS(app)
@@ -21,3 +22,4 @@ class Base(DeclarativeBase):
     #__allow_unmapped__ = True
 
 db = SQLAlchemy(app, model_class=Base)
+migrate = Migrate(app, db)
