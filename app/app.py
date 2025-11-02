@@ -1,7 +1,7 @@
 from config import app, db
 from routes.view_index import view_index
 from routes.view_motorista import motorista_bp
-from routes.view_ponto_trajeto import ponto_trjaeto_bp
+from routes.view_ponto_trajeto import ponto_trajeto_bp
 # from routes.viewCidadao import view_cidadao
 from routes.view_veiculo import veiculo_bp
 from routes.view_trajeto import view_trajeto
@@ -13,7 +13,7 @@ app.register_blueprint(motorista_bp, url_prefix='/motorista')
 # app.register_blueprint(view_cidadao, url_prefix='/cidadao')
 # app.register_blueprint(view_trajeto, url_prefix='/trajeto')
 app.register_blueprint(veiculo_bp, url_prefix='/veiculo')
-app.register_blueprint()
+
 # app.register_blueprint(view_viagem, url_prefix='/viagem')
 # app.register_blueprint(view_analise, url_prefix='/analise')
 
