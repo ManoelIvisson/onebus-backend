@@ -5,7 +5,7 @@ from models.veiculo import Veiculo
 
 ponto_trajeto_bp = Blueprint('view_ponto_trajeto', __name__)
 
-@motorista_bp.route('/create', methods=['POST'])
+@ponto_trajeto_bp.route('/create', methods=['POST'])
 def cerate_ponto_trajeto():
   """
   Rota para cadastrar um ponto de trajeto.
