@@ -4,7 +4,7 @@ from routes.view_motorista import motorista_bp
 from routes.view_ponto_trajeto import ponto_trajeto_bp
 # from routes.viewCidadao import view_cidadao
 from routes.view_veiculo import veiculo_bp
-from routes.view_trajeto import view_trajeto
+from routes.view_trajeto import trajeto_bp
 # from routes.viewViagem import view_viagem
 # from routes.viewAnalise import view_analise
 
