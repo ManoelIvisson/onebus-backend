@@ -46,3 +46,40 @@ def cerate_ponto_trajeto():
   return jsonify({
     "status": "created"
   }), 201
+  
+@ponto_trajeto_bp.route('/get-all', methods=['GET'])
+def get_pontos():
+  """
+  Rota para mostrar todos os pontos
+
+  Método:
+    Get
+
+  Retorno:
+    JSON listando todos os pontos
+  """
+  try:
+    pontos = PontoTrajeto.query.all()
+
+  except Exception as e:
+    return jsonify({
+      'status':'error',
+      'message':f'{str(e)}'
+    }), 500
+  
+  resposta_json = {}
+
+  for ponto in pontos:
+    resposta_json[ponto.id] = {
+      "latitude": ponto.latitude, 
+      "longitude": ponto.longitude, 
+      "criado_em": ponto.criado_em, 
+      "e_origem": ponto.e_origem, 
+      "e_destino": ponto.e_destino, 
+      "trajeto_id": ponto.trajeto_id
+    }
+
+  return jsonify({
+    "status":"success",
+    "data":resposta_json
+  }), 200
