@@ -1,6 +1,7 @@
+from datetime import datetime
 from config import db
 from flask import Blueprint, request, jsonify, render_template
-from models.motorista import Motorista
+from models.trajeto import Trajeto
 from models.veiculo import Veiculo
 
 trajeto_bp = Blueprint('view_trajeto', __name__)
@@ -13,50 +14,35 @@ def cerate_trajeto():
 
   data = request.get_json() # pega todos os dados passados pelo body
 
-  cnh = data.get('cnh') 
-  cpf= data.get('cpf') 
-  nome = data.get('nome') 
-  senha = data.get('senha') 
-  role = data.get('role') 
-  veiculo_id = data.get('veiculo_id')
+  nome = data.get("nome")
+  trajeto_planejado = data.get("trajeto_planejado")
+  horario_inicio = data.get("horario_inicio")
+  horario_final = data.get("horario_final")
+  veiculo_id = data.get("veiculo_id")
+
+  inicio = datetime.strptime(horario_inicio, "%H:%M").time()
+  final = datetime.strptime(horario_final, "%H:%M").time()
 
   try:
-    motorista_existente = Motorista.query.filter_by(cpf=cpf).first()
-    cnh_existente = Motorista.query.filter_by(cnh=cnh).first()
-
-  except Exception as e:
-    return jsonify({
-      'status':'error',
-      'message':f'{str(e)}'
-    }), 500
-  
-  if motorista_existente or cnh_existente:
-    return jsonify({
-      "status": "conflict"
-    }), 409
-
-  try:
-    motorista = Motorista(
-      cnh=cnh,
-      cpf=cpf,
-      nome_completo=nome,
-      senha=senha,
-      role=role,
+    trajeto = Trajeto(
+      nome = nome,
+      trajeto_planejado = trajeto_planejado,
+      horario_inicio = inicio,
+      horario_final = final,
+      veiculo_id = veiculo_id
     )
 
     if veiculo_id:
       try:
-        veiculo = Veiculo.query.filter_by(id=veiculo_id).first()
+        Veiculo.query.filter_by(id=veiculo_id).first()
       
       except Exception as e:
         return jsonify({
           'status':'error',
           'message':f'{str(e)}'
         }), 500
-      
-    motorista.veiculos.append(veiculo)
 
-    db.session.add(motorista)
+    db.session.add(trajeto)
     db.session.commit()
       
   except Exception as e:

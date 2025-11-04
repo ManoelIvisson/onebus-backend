@@ -14,13 +14,15 @@ class PontoTrajeto(db.Model):
   id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
   latitude: Mapped[str] = mapped_column(String)
   longitude: Mapped[str] = mapped_column(String)
+  e_origem: Mapped[bool] = mapped_column(default=False)
+  e_destino: Mapped[bool] = mapped_column(default=False)
   criado_em: Mapped[datetime] = mapped_column()
 
   # coluna de chave estrangeira
-  trajeto_id: Mapped[int] = mapped_column(ForeignKey('trajeto.id'))
+  trajeto_id: Mapped[int] = mapped_column(ForeignKey('trajeto.id'), nullable=True)
 
   # relacionamento para acesso na via contrária
   # se comunica com o relacionamento com Trajeto trajeto_ponto
   # relacionamento 1 trajeto para N pontos
   # cada ponto tem apenas 1 trajeto
-  trajeto: Mapped['Trajeto'] = relationship(back_populates='trajeto_ponto')
+  trajeto: Mapped['Trajeto'] = relationship(back_populates='pontos')

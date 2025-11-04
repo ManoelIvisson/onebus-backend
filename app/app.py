@@ -11,7 +11,8 @@ from routes.view_trajeto import trajeto_bp
 app.register_blueprint(view_index, url_prefix='/')
 app.register_blueprint(motorista_bp, url_prefix='/motorista')
 # app.register_blueprint(view_cidadao, url_prefix='/cidadao')
-# app.register_blueprint(view_trajeto, url_prefix='/trajeto')
+app.register_blueprint(trajeto_bp, url_prefix='/trajeto')
+app.register_blueprint(ponto_trajeto_bp, url_prefix='/ponto-trajeto')
 app.register_blueprint(veiculo_bp, url_prefix='/veiculo')
 
 # app.register_blueprint(view_viagem, url_prefix='/viagem')
