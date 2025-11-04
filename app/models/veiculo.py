@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey, Integer, String
 
 if TYPE_CHECKING:
   from models.motorista import Motorista
-  from models.embarcado import Embarcado
+  from app.models.rastreador import Rastreador
   from models.trajeto import Trajeto
 
 class Veiculo(db.Model):
@@ -19,9 +19,9 @@ class Veiculo(db.Model):
   motoristas: Mapped[list['Motorista']] = relationship(
     secondary=motorista_veiculo, back_populates="veiculos"
   )
-  embarcado_id: Mapped[int] = mapped_column(Integer, ForeignKey("embarcado.id"), unique=True)
+  rastreador_id: Mapped[int] = mapped_column(Integer, ForeignKey("rastreador.id"), unique=True)
   
-  embarcado: Mapped['Embarcado'] = relationship("Embarcado", back_populates="veiculo")
+  rastreador: Mapped['Rastreador'] = relationship("Rastreador", back_populates="veiculo")
 
   # relacionamento N trajetos de viagem para 1 carro
   # cada carro pode ter vários trajetos associados
