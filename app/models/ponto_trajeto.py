@@ -17,7 +17,8 @@ class PontoTrajeto(db.Model):
   e_origem: Mapped[bool] = mapped_column(default=False)
   e_destino: Mapped[bool] = mapped_column(default=False)
   criado_em: Mapped[datetime] = mapped_column()
-
+  mac: Mapped[str] = mapped_column(String, nullable=True)
+  
   # coluna de chave estrangeira
   trajeto_id: Mapped[int] = mapped_column(ForeignKey('trajeto.id'), nullable=True)
 

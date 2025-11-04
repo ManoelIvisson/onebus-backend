@@ -21,6 +21,7 @@ def cerate_ponto_trajeto():
   e_origem = data.get('e_origem')
   e_destino = data.get('e_destino')
   trajeto_id = data.get('trajeto_id')
+  mac = data.get('mac')
 
   criado_em = datetime.strptime(criado_em, "%Y-%m-%d %H:%M:%S")
 
@@ -31,7 +32,8 @@ def cerate_ponto_trajeto():
       criado_em=criado_em,
       e_origem=e_origem,
       e_destino=e_destino,
-      trajeto_id=trajeto_id
+      trajeto_id=trajeto_id,
+      mac=mac
     )
 
     db.session.add(ponto_trajeto)
