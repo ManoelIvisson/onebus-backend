@@ -78,7 +78,8 @@ def get_pontos():
       "criado_em": ponto.criado_em, 
       "e_origem": ponto.e_origem, 
       "e_destino": ponto.e_destino, 
-      "trajeto_id": ponto.trajeto_id
+      "trajeto_id": ponto.trajeto_id,
+      "mac": ponto.mac
     }
 
   return jsonify({
