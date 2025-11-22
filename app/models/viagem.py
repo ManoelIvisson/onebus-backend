@@ -13,7 +13,7 @@ class Viagem(db.Model):
 
   id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
   horario_inicio: Mapped[datetime.time] = mapped_column()
-  horario_final: Mapped[datetime.time] = mapped_column()
+  horario_final: Mapped[datetime.time] = mapped_column(nullable=True)
   atrasou: Mapped[bool] = mapped_column(default=False)
   desviou: Mapped[bool] = mapped_column(default=False)
   status: Mapped[str] = mapped_column(String(15), default='ativa')
