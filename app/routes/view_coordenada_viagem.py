@@ -27,15 +27,15 @@ def cerate_coordenada_viagem():
     if not veiculo:
       return jsonify({
         'status': 'error',
-        'message': f'Veículo não encontrado para esse MAC {mac}'
-      }), mac
+        'message': 'Veículo não encontrado para esse MAC.'
+      }), 404
     
     viagem = Viagem.query.filter_by(veiculo_id=veiculo.id, status="ativa").first()
     if not viagem:
       return jsonify({
         'status': 'error',
-        'message': f'Veículo não encontrado para esse MAC {mac}'
-      }), mac
+        'message': 'Veículo não encontrado para esse MAC.'
+      }), 404
   except Exception as e:
     return jsonify({
       'status':'error',
