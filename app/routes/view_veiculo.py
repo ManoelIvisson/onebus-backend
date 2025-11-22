@@ -22,6 +22,8 @@ def create_veiculo():
   data = request.get_json()
   placa = data.get('placa')
   tipo = data.get('tipo')
+  modelo = data.get('modelo')
+  mac_embarcado = data.get('mac_embarcado')
   
   try:
     veiculo_existente = Veiculo.query.filter_by(placa=placa).first()
@@ -40,7 +42,9 @@ def create_veiculo():
   else:
     veiculo = Veiculo(
       placa=placa,
-      tipo=tipo
+      tipo=tipo,
+      modelo=modelo,
+      mac_embarcado=mac_embarcado
     )
       
     try:
@@ -49,7 +53,7 @@ def create_veiculo():
 
     except Exception as e:
       return jsonify({
-      "status":"error",
+      "status":"error here",
       "message":f"{str(e)}"
       }), 500
     
