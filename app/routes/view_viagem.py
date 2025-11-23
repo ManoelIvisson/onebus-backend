@@ -92,6 +92,6 @@ def get_viagem_com_coordenadas(id):
       'message':f'{str(e)}'
     }), 500
     
-  return jsonify({
+  return jsonify(
       viagem.to_dict(incluir_coordenadas=True),
-    }), 200
+    ), 200
