@@ -48,3 +48,51 @@ def cerate_viagem():
   return jsonify({
     "status": "created"
   }), 201
+
+@viagem_bp.route('/get/<int:id>', methods=['GET'])
+def get_viagem(id):
+  """
+  Rota para pegar uma viagem por id.
+  """
+  
+  try:
+    viagem = Viagem.query.filter_by(id=id).first()
+    if not viagem:
+      return jsonify({
+          'status':'error',
+          'message': 'Viagem com o id informado não existe.'
+        }), 404
+  except Exception as e:
+    return jsonify({
+      'status':'error',
+      'message':f'{str(e)}'
+    }), 500
+    
+  return jsonify({
+      "data": viagem.to_dict(incluir_coordenadas=False),
+      "status": "success"
+    }), 200
+  
+@viagem_bp.route('/get/coord/<int:id>', methods=['GET'])
+def get_viagem_com_coordenadas(id):
+  """
+  Rota para pegar uma viagem com suas coordenadas por id.
+  """
+  
+  try:
+    viagem = Viagem.query.filter_by(id=id).first()
+    if not viagem:
+      return jsonify({
+          'status':'error',
+          'message': 'Viagem com o id informado não existe.'
+        }), 404
+  except Exception as e:
+    return jsonify({
+      'status':'error',
+      'message':f'{str(e)}'
+    }), 500
+    
+  return jsonify({
+      "data": viagem.to_dict(incluir_coordenadas=True),
+      "status": "success"
+    }), 200

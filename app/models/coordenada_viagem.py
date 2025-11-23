@@ -18,3 +18,12 @@ class CoordenadaViagem(db.Model):
   
   viagem_id: Mapped[int] = mapped_column(ForeignKey('viagem.id'), nullable=True)
   viagem: Mapped['Viagem'] = relationship(back_populates='coordenadas')
+  
+  def to_dict(self):
+    return {
+      "id": self.id,
+      "latitude": self.latitude,
+      "longitude": self.longitude,
+      "criado_em": self.criado_em.strftime("%Y-%m-%d %H:%M:%S"),
+      "mac": self.mac
+    }

@@ -22,3 +22,18 @@ class Viagem(db.Model):
   veiculo: Mapped['Veiculo'] = relationship(back_populates='viagem')
 
   coordenadas: Mapped[list['CoordenadaViagem']] = relationship()
+  
+  def to_dict(self, incluir_coordenadas):
+    data = {
+      "id": self.id,
+      "horario_inicio": self.horario_inicio.strftime("%H:%M") if self.horario_inicio else None,
+      "horario_final": self.horario_final.strftime("%H:%M") if self.horario_final else None,
+      "atrasou": self.atrasou,
+      "desviou": self.desviou,
+      "status": self.status
+    }
+    
+    if incluir_coordenadas:
+      data["coordenadas"] = [c.to_dict() for c in self.coordenadas]
+    
+    return data
