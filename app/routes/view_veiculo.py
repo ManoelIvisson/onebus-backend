@@ -93,6 +93,32 @@ def get_veiculos():
     "status":"success",
     "data":resposta_json
     }), 200
+  
+  
+@veiculo_bp.route('/get-all/coord-atual', methods=['GET'])
+def get_veiculos_com_coord_atual():
+  """
+  Rota para mostrar todos os veiculos com suas coordenadas atuais
+
+  Método:
+    Get
+
+  Retorno:
+    JSON listando todos os veiculos com suas coordenadas atuais
+  """
+  try:
+    veiculos = Veiculo.query.all()
+
+  except Exception as e:
+    return jsonify({
+      "status":"error",
+      "message":f"{str(e)}"
+    }), 500
+
+  return jsonify({
+    "status":"success",
+    "data": [v.to_dict() for v in veiculos]
+    }), 200
 
 @veiculo_bp.route('/get/<int:id>', methods=['GET'])
 def get_veiculo(id):

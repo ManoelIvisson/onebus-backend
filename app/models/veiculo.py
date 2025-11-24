@@ -1,3 +1,4 @@
+from models.coordenada_viagem import CoordenadaViagem
 from models.motorista_veiculo import motorista_veiculo
 from config import db
 from typing import TYPE_CHECKING, Optional
@@ -22,6 +23,21 @@ class Veiculo(db.Model):
   )
 
   viagem: Mapped[list['Viagem']] = relationship()
+  
+  def get_coordenada_atual(self):
+    coord = CoordenadaViagem.query \
+      .filter_by(mac=self.mac_embarcado) \
+      .order_by(CoordenadaViagem.criado_em.desc()) \
+      .first()
+      
+    if not coord:
+      return None
+    
+    return {
+      "latitude": coord.latitude,
+      "longitude": coord.longitude,
+      "criado_em": coord.criado_em.isoformat(),
+    }
 
   def to_dict(self):
     return {
@@ -29,5 +45,6 @@ class Veiculo(db.Model):
       "tipo": self.tipo,
       "placa": self.placa,
       "modelo": self.modelo,
-      "mac_embarcado": self.mac_embarcado
+      "mac_embarcado": self.mac_embarcado,
+      "coordenada_atual": self.get_coordenada_atual()
     }
