@@ -47,5 +47,6 @@ class Veiculo(db.Model):
       "placa": self.placa,
       "modelo": self.modelo,
       "mac_embarcado": self.mac_embarcado,
-      "coordenada_atual": self.get_coordenada_atual()
+      "coordenada_atual": self.get_coordenada_atual(),
+      "status": self.status
     }
