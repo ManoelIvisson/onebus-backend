@@ -50,11 +50,15 @@ def cerate_coordenada_viagem():
       viagem_id=viagem.id,
       mac=mac
     )
+    
+    veiculo.status = "ativo"
 
     db.session.add(ponto_trajeto)
+    db.session.add(veiculo)
     db.session.commit()
       
   except Exception as e:
+    db.session.rollback()
     return jsonify({
       'status':'error',
       'message':f'{str(e)}'

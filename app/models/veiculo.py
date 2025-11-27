@@ -17,6 +17,7 @@ class Veiculo(db.Model):
   tipo: Mapped[str] = mapped_column(String(20))
   modelo: Mapped[str] = mapped_column(String(30))
   mac_embarcado: Mapped[str] = mapped_column(String(16))
+  status: Mapped[str] = mapped_column(String(20), default='inativo')
 
   motoristas: Mapped[list['Motorista']] = relationship(
     secondary=motorista_veiculo, back_populates="veiculos"
