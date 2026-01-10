@@ -1,0 +1,72 @@
+Cadastra uma nova coordenada de viagem
+---
+tags:
+  - Coordenadas de Viagem
+parameters:
+  - in: body
+    name: body
+    description: Dados da coordenada de viagem
+    required: true
+    schema:
+      type: object
+      required:
+        - latitude
+        - longitude
+        - criado_em
+        - mac
+      properties:
+        latitude:
+          type: string
+          example: "-5.795432"
+          description: Latitude da coordenada (string)
+        longitude:
+          type: string
+          example: "-35.211098"
+          description: Longitude da coordenada (string)
+        criado_em:
+          type: string
+          format: date-time
+          example: "2024-01-10 14:30:45"
+          description: Data e hora da criação da coordenada (formato YYYY-MM-DD HH:MM:SS)
+        mac:
+          type: string
+          example: "00:1B:44:11:3A:B7"
+          description: Endereço MAC do dispositivo embarcado
+responses:
+  201:
+    description: Coordenada criada com sucesso
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "created"
+  404:
+    description: Veículo ou viagem não encontrados
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Veículo não encontrado para esse MAC."
+    examples:
+      veiculo_nao_encontrado:
+        status: "error"
+        message: "Veículo não encontrado para esse MAC."
+      viagem_nao_encontrada:
+        status: "error"
+        message: "Nenhuma viagem ativa encontrada para este veículo."
+  500:
+    description: Erro interno do servidor
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Erro ao processar a requisição"

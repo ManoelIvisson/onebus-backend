@@ -11,13 +11,13 @@ from routes.view_viagem import viagem_bp
 # from routes.viewAnalise import view_analise
 
 app.register_blueprint(view_index, url_prefix='/')
-app.register_blueprint(motorista_bp, url_prefix='/motorista')
+app.register_blueprint(motorista_bp, url_prefix='/api/v1/motorista')
 # app.register_blueprint(view_cidadao, url_prefix='/cidadao')
-app.register_blueprint(trajeto_bp, url_prefix='/trajeto')
-app.register_blueprint(viagem_bp, url_prefix='/viagem')
-app.register_blueprint(ponto_trajeto_bp, url_prefix='/ponto-trajeto')
-app.register_blueprint(coordenada_viagem_bp, url_prefix='/coordenada-viagem')
-app.register_blueprint(veiculo_bp, url_prefix='/veiculo')
+app.register_blueprint(trajeto_bp, url_prefix='/api/v1/trajeto')
+app.register_blueprint(viagem_bp, url_prefix='/api/v1/viagem')
+app.register_blueprint(ponto_trajeto_bp, url_prefix='/api/v1/ponto-trajeto')
+app.register_blueprint(coordenada_viagem_bp, url_prefix='/api/v1/coordenada-viagem')
+app.register_blueprint(veiculo_bp, url_prefix='/api/v1/veiculo')
 
 # app.register_blueprint(view_viagem, url_prefix='/viagem')
 # app.register_blueprint(view_analise, url_prefix='/analise')

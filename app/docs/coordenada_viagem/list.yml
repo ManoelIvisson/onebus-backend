@@ -1,0 +1,73 @@
+Lista todas as coordenadas de viagem
+---
+tags:
+  - Coordenadas de Viagem
+parameters:
+  - name: viagem_id
+    in: query
+    type: integer
+    required: false
+    description: Filtrar coordenadas por ID da viagem
+    example: 1
+  - name: mac
+    in: query
+    type: string
+    required: false
+    description: Filtrar coordenadas por MAC do dispositivo
+    example: "00:1B:44:11:3A:B7"
+  - name: limit
+    in: query
+    type: integer
+    required: false
+    default: 100
+    description: Número máximo de resultados
+    example: 50
+  - name: offset
+    in: query
+    type: integer
+    required: false
+    default: 0
+    description: Número de registros para pular (paginação)
+    example: 0
+responses:
+  200:
+    description: Lista de coordenadas retornada com sucesso
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              latitude:
+                type: string
+                example: "-5.795432"
+              longitude:
+                type: string
+                example: "-35.211098"
+              criado_em:
+                type: string
+                example: "2024-01-10 14:30:45"
+              mac:
+                type: string
+                example: "00:1B:44:11:3A:B7"
+        total:
+          type: integer
+          example: 150
+  500:
+    description: Erro interno do servidor
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string

@@ -5,10 +5,12 @@ from flask import Blueprint, request, jsonify, render_template
 from models.coordenada_viagem import CoordenadaViagem
 from models.veiculo import Veiculo
 from models.viagem import Viagem
+from flasgger import swag_from
 
 coordenada_viagem_bp = Blueprint('view_coordenada_viagem', __name__)
 
 @coordenada_viagem_bp.route('/create', methods=['POST'])
+@swag_from("../docs/coordenada_viagem/create.yml")
 def cerate_coordenada_viagem():
   """
   Rota para cadastrar uma coordenada de viagem
@@ -69,6 +71,7 @@ def cerate_coordenada_viagem():
   }), 201
   
 @coordenada_viagem_bp.route('/get-all', methods=['GET'])
+@swag_from("../docs/coordenada_viagem/list.yml")
 def get_Coordenadas():
   """
   Rota para mostrar todos os pontos
