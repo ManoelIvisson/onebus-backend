@@ -5,7 +5,7 @@ from models.veiculo import Veiculo
 
 motorista_bp = Blueprint('view_motorista', __name__)
 
-@motorista_bp.route('/create', methods=['POST'])
+@motorista_bp.route('', methods=['POST'])
 def cerate_motorista():
   """
   Rota para cadastrar um motorista no banco de dados.
@@ -70,7 +70,7 @@ def cerate_motorista():
   }), 201
     
 
-@motorista_bp.route('/get-all', methods=['GET'])
+@motorista_bp.route('', methods=['GET'])
 def get_motoristas():
   """
   Rota para mostrar todos os motoristas
@@ -109,7 +109,7 @@ def get_motoristas():
     "data":resposta_json
   }), 200
 
-@motorista_bp.route('/get/<int:id>', methods=['GET'])
+@motorista_bp.route('/<int:id>', methods=['GET'])
 def get_motorista(id):
     """
     Rota para mostrar um motorista pelo id passado pela URL
@@ -152,7 +152,7 @@ def get_motorista(id):
             'status':'not found'
         }), 404
 
-@motorista_bp.route('/delete/<int:id>', methods=['DELETE'])
+@motorista_bp.route('/<int:id>', methods=['DELETE'])
 def delete_motorista(id):
     """
     Rota para deletar um motorista com o id informado
@@ -193,7 +193,7 @@ def delete_motorista(id):
         }), 404
 
 
-@motorista_bp.route('/edit/<int:id>', methods=['PUT'])
+@motorista_bp.route('/<int:id>', methods=['PUT'])
 def edit_motorista(id):
     """
     Rota para editar um motorista com o id informado

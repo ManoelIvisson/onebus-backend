@@ -11,6 +11,9 @@ class Motorista(Usuario):
   __tablename__ = 'motorista'
 
   cnh: Mapped[str] = mapped_column(String, unique=True)
+  status: Mapped[str] = mapped_column(String, default="ativo")
+  
   veiculos: Mapped[list['Veiculo']] = relationship(
       secondary=motorista_veiculo, back_populates="motoristas"
   )
+  
