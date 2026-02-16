@@ -17,7 +17,7 @@ def cerate_motorista():
   cpf= data.get('cpf') 
   nome = data.get('nome') 
   senha = data.get('senha') 
-  role = data.get('role') 
+  role = "motorista"
   veiculo_id = data.get('veiculo_id')
 
   try:
@@ -47,6 +47,7 @@ def cerate_motorista():
     if veiculo_id:
       try:
         veiculo = Veiculo.query.filter_by(id=veiculo_id).first()
+        motorista.veiculos.append(veiculo)
       
       except Exception as e:
         return jsonify({
@@ -54,7 +55,7 @@ def cerate_motorista():
           'message':f'{str(e)}'
         }), 500
       
-    motorista.veiculos.append(veiculo)
+    
 
     db.session.add(motorista)
     db.session.commit()
@@ -66,7 +67,11 @@ def cerate_motorista():
     }), 500
   
   return jsonify({
-    "status": "created"
+    "status": "created",
+    "data": {
+      "id": motorista.id,
+      "nome_completo": motorista.nome_completo
+    }
   }), 201
     
 
@@ -90,19 +95,21 @@ def get_motoristas():
       'message':f'{str(e)}'
     }), 500
   
-  resposta_json = {}
+  resposta_json = []
 
   for motorista in motoristas:
     veiculos_serializados = [veiculo.to_dict() for veiculo in motorista.veiculos]
 
-    resposta_json[motorista.id] = {
-      "nome completo": motorista.nome_completo, 
-      "cpf": motorista.cpf, 
-      "senha": motorista.senha, 
-      "role": motorista.role, 
-      "veiculos": veiculos_serializados, 
+    resposta_json.append({
+      "id": motorista.id,
+      "nome_completo": motorista.nome_completo,
+      "cpf": motorista.cpf,
+      "senha": motorista.senha,
+      "role": motorista.role,
+      "veiculos": veiculos_serializados,
       "cnh": motorista.cnh
-    }
+    })
+
 
   return jsonify({
     "status":"success",
