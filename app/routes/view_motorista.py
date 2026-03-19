@@ -15,7 +15,7 @@ def cerate_motorista():
 
   cnh = data.get('cnh') 
   cpf= data.get('cpf') 
-  nome = data.get('nome') 
+  nome = data.get('nome_completo') 
   senha = data.get('senha') 
   role = "motorista"
   veiculo_id = data.get('veiculo_id')
@@ -107,7 +107,8 @@ def get_motoristas():
       "senha": motorista.senha,
       "role": motorista.role,
       "veiculos": veiculos_serializados,
-      "cnh": motorista.cnh
+      "cnh": motorista.cnh,
+      "status": motorista.status
     })
 
 
@@ -224,7 +225,7 @@ def edit_motorista(id):
         }), 500
     
     if motorista:
-        nome = data.get('nome')
+        nome = data.get('nome_completo')
         cnh = data.get('cnh')
         cpf = data.get('cpf')
         senha = data.get('senha')
