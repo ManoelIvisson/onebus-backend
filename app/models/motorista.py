@@ -14,6 +14,6 @@ class Motorista(Usuario):
   status: Mapped[str] = mapped_column(String, default="ativo")
   
   veiculos: Mapped[list['Veiculo']] = relationship(
-      secondary=motorista_veiculo, back_populates="motoristas"
+    secondary=motorista_veiculo, back_populates="motoristas"
   )
   

@@ -54,8 +54,6 @@ def cerate_motorista():
           'status':'error',
           'message':f'{str(e)}'
         }), 500
-      
-    
 
     db.session.add(motorista)
     db.session.commit()
@@ -203,52 +201,64 @@ def delete_motorista(id):
 
 @motorista_bp.route('/<int:id>', methods=['PUT'])
 def edit_motorista(id):
-    """
-    Rota para editar um motorista com o id informado
+  """
+  Rota para editar um motorista com o id informado
 
-    Método:
-        PUT
+  Método:
+    PUT
 
-    Retorno:
-        JSON mostrando motorista editado
-    """
+  Retorno:
+    JSON mostrando motorista editado
+  """
 
-    data = request.get_json()
-    
+  data = request.get_json()
+  
+  try:
+    motorista = Motorista.query.filter_by(id=id).first()
+
+  except Exception as e:
+    return jsonify({
+      'status':'error',
+      'message':f'{str(e)}'
+    }), 500
+  
+  if motorista:
+    nome = data.get('nome_completo')
+    cnh = data.get('cnh')
+    cpf = data.get('cpf')
+    senha = data.get('senha')
+    role = data.get('role')
+    veiculo_id = data.get('veiculo_id')
+
+    if veiculo_id:
+      try:
+        veiculo = Veiculo.query.filter_by(id=veiculo_id).first()
+        motorista.veiculos.append(veiculo)
+      
+      except Exception as e:
+        return jsonify({
+          'status':'error',
+          'message':f'{str(e)}'
+        }), 500
+
     try:
-        motorista = Motorista.query.filter_by(id=id).first()
+      motorista.nome_completo = nome
+      motorista.cnh = cnh
+      motorista.cpf = cpf
+      motorista.senha = senha
+      motorista.role = role
+      db.session.commit()
 
     except Exception as e:
-        return jsonify({
-            'status':'error',
-            'message':f'{str(e)}'
-        }), 500
-    
-    if motorista:
-        nome = data.get('nome_completo')
-        cnh = data.get('cnh')
-        cpf = data.get('cpf')
-        senha = data.get('senha')
-        role = data.get('role')
+      return jsonify({
+        "status":"error",
+        "message":f"{str(e)}"
+      }), 500
 
-        try:
-            motorista.nome_completo = nome
-            motorista.cnh = cnh
-            motorista.cpf = cpf
-            motorista.senha = senha
-            motorista.role = role
-            db.session.commit()
-
-        except Exception as e:
-            return jsonify({
-                "status":"error",
-                "message":f"{str(e)}"
-            }), 500
-
-        return jsonify({
-            "status":"updated",
-        }), 200
-    else:
-        return jsonify({
-            "status":"not found",
-        }), 404
+    return jsonify({
+      "status":"updated",
+    }), 200
+  else:
+    return jsonify({
+      "status":"not found",
+    }), 404

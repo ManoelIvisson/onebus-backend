@@ -7,7 +7,7 @@ from models.motorista import Motorista
 
 veiculo_bp = Blueprint('veiculo_bp', __name__)
 
-@veiculo_bp.route('/create', methods=['POST'])
+@veiculo_bp.route('', methods=['POST'])
 def create_veiculo():
   """
   Rota para cadastrar veiculos no banco de dados.
@@ -61,7 +61,7 @@ def create_veiculo():
       "status":"created"
     }), 201
 
-@veiculo_bp.route('/get-all', methods=['GET'])
+@veiculo_bp.route('', methods=['GET'])
 def get_veiculos():
   """
   Rota para mostrar todos os veiculos
@@ -81,13 +81,16 @@ def get_veiculos():
       "message":f"{str(e)}"
     }), 500
   
-  resposta_json = {}
+  resposta_json = []
 
   for veiculo in veiculos:
-    resposta_json[veiculo.id] = {
-      "placa": veiculo.placa, 
-      "tipo": veiculo.tipo
-    }
+    resposta_json.append({
+      "id": veiculo.id,
+      "placa": veiculo.placa,
+      "modelo": veiculo.modelo, 
+      "tipo": veiculo.tipo,
+      "status": veiculo.status
+    })
 
   return jsonify({
     "status":"success",
