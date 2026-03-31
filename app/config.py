@@ -5,6 +5,7 @@ from sqlalchemy.orm import DeclarativeBase
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flasgger import Swagger
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 CORS(app)
@@ -24,6 +25,8 @@ class Base(DeclarativeBase):
 
 db = SQLAlchemy(app, model_class=Base)
 migrate = Migrate(app, db)
+
+load_dotenv()
 
 swagger_config = {
     "headers": [],

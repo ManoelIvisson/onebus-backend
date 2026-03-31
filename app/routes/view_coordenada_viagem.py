@@ -45,7 +45,7 @@ def cerate_coordenada_viagem():
     }), 500
 
   try:
-    ponto_trajeto = CoordenadaViagem(
+    coordenada_viagem = CoordenadaViagem(
       latitude=latitude,
       longitude=longitude,
       criado_em=criado_em,
@@ -55,7 +55,7 @@ def cerate_coordenada_viagem():
     
     veiculo.status = "ativo"
 
-    db.session.add(ponto_trajeto)
+    db.session.add(coordenada_viagem)
     db.session.add(veiculo)
     db.session.commit()
       
