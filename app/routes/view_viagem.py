@@ -7,7 +7,7 @@ from models.veiculo import Veiculo
 
 viagem_bp = Blueprint('view_viagem', __name__)
 
-@viagem_bp.route('/create', methods=['POST'])
+@viagem_bp.route('', methods=['POST'])
 def cerate_viagem():
   """
   Rota para cadastrar uma viagem.
