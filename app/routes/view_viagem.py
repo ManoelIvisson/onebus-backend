@@ -69,7 +69,7 @@ def get_viagem(id):
     }), 500
     
   return jsonify({
-      "data": viagem.to_dict(incluir_coordenadas=False),
+      "data": viagem.to_dict(incluir_coordenadas=True),
       "status": "success"
     }), 200
   
